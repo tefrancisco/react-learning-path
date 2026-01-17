@@ -2,6 +2,7 @@
 
 import { saveMeal } from "./meals";
 import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache'
 
 function isInvalidText(title) {
   return !title || title.trim() === "";
@@ -24,14 +25,17 @@ export async function shareMeal(prevState, formData) {
     isInvalidText(meal.instructions) ||
     isInvalidText(meal.creator) ||
     isInvalidText(meal.creator_email) ||
-    !meal.image || meal.image.size === 0
+    !meal.image ||
+    meal.image.size === 0
   ) {
     return {
-      message: 'Invalid input.'
-    }
-    }
+      message: "Invalid input.",
+    };
+  }
 
   await saveMeal(meal);
-
+  // With the 'layout' property, all of the nested pages will be revalidated too.
+  // None, 'page' for layout, it will just revalidate the meals path.
+  revalidatePath("/meals");
   redirect("/meals");
 }

@@ -3,6 +3,11 @@ import slugify from "slugify";
 import xss from "xss";
 import fs from "node:fs";
 
+export const metadata = {
+  title: 'All Meals',
+  description: 'These is our meals.',
+};
+
 const db = sql("meals.db");
 
 export function getMeals() {
